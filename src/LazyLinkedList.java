@@ -48,7 +48,7 @@ public class LazyLinkedList<T extends Comparable<T>> {
 					}
 					else if (tagToReplace==true && validateReplace(pred, curr)) {
 						yes=1;
-						if (curr.key.compareTo((Integer) item) == 0) {
+						if (curr.key==key) {
 							return false;
 						} 
 					}
@@ -105,6 +105,9 @@ public class LazyLinkedList<T extends Comparable<T>> {
 	// replace the item from linkedList
 
 	public boolean replace(T oldItem, T newItem) {
+		if(oldItem.compareTo(newItem)==0) {
+			return false;
+		}
 		boolean itemModified = add(newItem, true);
 		itemModified = itemModified | remove(oldItem);
 		Integer key = newItem.hashCode();
