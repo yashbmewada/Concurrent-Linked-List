@@ -1,32 +1,37 @@
 
-
 public class LazyLinkedList<T extends Comparable<T>> {
 
 	private ListNode<T> head;
-	
-	
+
 	public LazyLinkedList() {
 		this.head = new ListNode<>(Integer.MIN_VALUE);
 		this.head.next = new ListNode<>(Integer.MAX_VALUE);
 	}
-	
-	//validate that the pred.next is pointing to same current when it was first called.
+
+	// validate that the pred.next is pointing to same current when it was first
+	// called.
 	private boolean validateNodes(ListNode<T> pred, ListNode<T> curr) {
 		return !pred.marked && !curr.marked && pred.next == curr;
 	}
-	
-	//validate whether an item can be replaced or tagged by some other thread already to replace
+
+	// validate whether an item can be replaced or tagged by some other thread
+	// already to replace
 	private boolean validateReplace(ListNode<T> pred, ListNode<T> curr) {
 		return !pred.marked && !curr.marked && pred.next == curr && !pred.tagToReplace && !curr.tagToReplace;
 	}
-	
-	//add method if only item is given , No Tag - default TagtoReplace is false.
+
+	// add method if only item is given , No Tag - default TagtoReplace is false.
 	public boolean add(T item) {
-		int key = item.hashCode();
-		while(true) {
+		return add(item, false);
+	}
+
+	// add an item while tagging it to replace another item
+	private boolean add(T item, boolean tagToReplace) {
+		Integer key = item.hashCode();
+		while (true) {
 			ListNode<T> pred = this.head;
 			ListNode<T> curr = head.next;
-			while(curr.key < key) {
+			while (curr.key < key) {
 				pred = curr;
 				curr = curr.next;
 			}
@@ -34,69 +39,39 @@ public class LazyLinkedList<T extends Comparable<T>> {
 			try {
 				curr.lock();
 				try {
-					if(validateNodes(pred,curr)) {
-						if(curr.key == key) {
+					int yes=0;
+					if (tagToReplace==false && validateNodes(pred, curr)) {
+						yes=1;
+						if (curr.key == key) {
 							return false;
-						}else {
-							ListNode<T> nodeToInsert = new ListNode<>(item);
-							nodeToInsert.next = curr;
-							pred.next = nodeToInsert;
-							return true;
 						}
 					}
-				}finally {
-					curr.unlock();
-				}
-			}finally {
-				pred.unlock();
-			}
-
-		}
-
-	}
-	
-	
-	
-	//add an item while tagging it to replace another item
-	private boolean add(T item,boolean tagToReplace) {
-		int key = item.hashCode();
-		while(true) {
-			ListNode<T> pred = this.head;
-			ListNode<T> curr = head.next;
-			while(curr.key < key) {
-				pred = curr;
-				curr = curr.next;
-			}
-			pred.lock();
-			try {
-				curr.lock();
-				try {
-					if(validateReplace(pred,curr)) {
-						if(curr.listItem.compareTo(item) < 0) {
+					else if (tagToReplace==true && validateReplace(pred, curr)) {
+						yes=1;
+						if (curr.key.compareTo((Integer) item) == 0) {
 							return false;
-						}else {
-							ListNode<T> nodeToInsert = new ListNode<>(item,tagToReplace);
-							nodeToInsert.next = curr;
-							pred.next = nodeToInsert;
-							return true;
-
-						}
+						} 
 					}
-				}finally {
+					if(yes==1) {
+						ListNode<T> nodeToInsert = new ListNode<>(item, tagToReplace);
+						nodeToInsert.next = curr;
+						pred.next = nodeToInsert;
+						return true;
+					}
+				} finally {
 					curr.unlock();
 				}
-			}finally {
+			} finally {
 				pred.unlock();
 			}
 
 		}
 	}
-	
-	
-	//delelte item from the linkedlist.
-	
+
+	// delete item from the linkedlist.
+
 	public boolean remove(T item) {
-		int key = item.hashCode();
+		Integer key = item.hashCode();
 		while (true) {
 			ListNode<T> pred = this.head;
 			ListNode<T> curr = head.next;
@@ -109,34 +84,34 @@ public class LazyLinkedList<T extends Comparable<T>> {
 				curr.lock();
 				try {
 					if (validateNodes(pred, curr)) {
-						if (curr.key != key) { // present
+						if (curr.key != key) { 
 							return false;
-						} else { // absent
-							curr.marked = true; // logically remove
-							pred.next = curr.next; // physically remove
+						} else {
+							curr.marked = true; 
+							pred.next = curr.next;
 							return true;
 						}
 					}
-				} finally { // always unlock curr
+				} finally {
 					curr.unlock();
 				}
-			} finally { // always unlock pred
+			} finally { 
 				pred.unlock();
 			}
 
 		}
 	}
-	
-	//replace the item from linkedList
-	
+
+	// replace the item from linkedList
+
 	public boolean replace(T oldItem, T newItem) {
 		boolean itemModified = add(newItem, true);
 		itemModified = itemModified | remove(oldItem);
-		int key = newItem.hashCode();
-		while(true) {
+		Integer key = newItem.hashCode();
+		while (true) {
 			ListNode<T> pred = this.head;
 			ListNode<T> curr = head.next;
-			while(curr.key != key) {
+			while (curr.key != key) {
 				pred = curr;
 				curr = curr.next;
 			}
@@ -154,8 +129,8 @@ public class LazyLinkedList<T extends Comparable<T>> {
 			}
 		}
 	}
-	
-	//contains implementation
+
+	// contains implementation
 	public boolean contains(T item) {
 		int key = item.hashCode();
 		ListNode<T> curr = this.head;
@@ -163,8 +138,7 @@ public class LazyLinkedList<T extends Comparable<T>> {
 			curr = curr.next;
 		return curr.key == key && !curr.marked && !curr.tagToReplace;
 	}
-	
-	
+
 	@Override
 	public synchronized String toString() {
 		ListNode<T> ptr = head.next;
@@ -176,8 +150,5 @@ public class LazyLinkedList<T extends Comparable<T>> {
 		sb.append("]");
 		return sb.toString();
 	}
-	
-
-
 
 }
