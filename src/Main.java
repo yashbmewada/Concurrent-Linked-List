@@ -56,7 +56,7 @@ public class Main {
 					System.out.printf(list.toString());
 					list.remove(integer+1);
 					//System.out.println("---"+list.toString());
-					list.replace(integer, integer-1);
+					list.replace(integer, 5);
 					//System.out.println("---"+list.toString());
 					
 				}

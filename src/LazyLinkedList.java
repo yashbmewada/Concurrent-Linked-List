@@ -40,13 +40,13 @@ public class LazyLinkedList<T extends Comparable<T>> {
 				curr.lock();
 				try {
 					int yes=0;
-					if (tagToReplace==false && validateNodes(pred, curr)) {
+					if (!tagToReplace && validateNodes(pred, curr)) {
 						yes=1;
 						if (curr.key == key) {
 							return false;
 						}
 					}
-					else if (tagToReplace==true && validateReplace(pred, curr)) {
+					else if (tagToReplace && validateReplace(pred, curr)) {
 						yes=1;
 						if (curr.key==key) {
 							return false;
