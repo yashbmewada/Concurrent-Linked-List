@@ -3,28 +3,25 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ListNode<T extends Comparable<T>> {
 
-
-    //item stored in list
+	// item stored in list
 	T listItem;
-	
-	//hash code as key
-	int key;
-	
-	//next item in the list
+
+	// hash code as key
+	Integer key;
+
+	// next item in the list
 	ListNode<T> next;
-	
-	//marked determines if deleted or not
+
+	// marked determines if deleted or not
 	boolean marked;
 
-	//tag for marking a node for replacement
-    boolean tagToReplace;
+	// tag for marking a node for replacement
+	boolean tagToReplace;
 
-	
-	//lock to perform operation
+	// lock to perform operation
 	Lock lock;
 
-	
-	//constructor if only item is provided (default tagToReplace false);
+	// constructor if only item is provided (default tagToReplace false);
 	ListNode(T item) { // usual constructor
 		this.listItem = item;
 		this.key = item.hashCode();
@@ -33,9 +30,9 @@ public class ListNode<T extends Comparable<T>> {
 		this.tagToReplace = false;
 		this.lock = new ReentrantLock();
 	}
-	
-	//constructor for sentinel nodes
-	ListNode(int key) { 
+
+	// constructor for sentinel nodes
+	ListNode(int key) {
 		this.listItem = null;
 		this.key = key;
 		this.next = null;
@@ -43,8 +40,8 @@ public class ListNode<T extends Comparable<T>> {
 		this.tagToReplace = false;
 		this.lock = new ReentrantLock();
 	}
-	
-	//constructor for actual list item
+
+	// constructor for actual list item
 	ListNode(T item, boolean tagToReplace) {
 		this.listItem = item;
 		this.key = item.hashCode();
@@ -54,19 +51,14 @@ public class ListNode<T extends Comparable<T>> {
 		this.lock = new ReentrantLock();
 	}
 
-	
-	//Lock Node
+	// Lock Node
 	void lock() {
 		lock.lock();
 	}
 
-	
-	//Unlock Node
+	// Unlock Node
 	void unlock() {
 		lock.unlock();
 	}
-	
-	
-	
-	
+
 }
