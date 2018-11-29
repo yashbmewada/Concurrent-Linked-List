@@ -1,0 +1,24 @@
+Insertion Threads, Removal Threads, Replacement Threads,,,,
+,,,,,,
+5,3,2,,,,
+Time,Operation,Status,Item1,Item2,Result,List
+17024349, replace, started,0,0, , [ ] 
+17055619, remove, started,0, , , [ ] 
+17640624, replace, finished,0,0, false, [ ] 
+17672460, replace, started,0,0, , [ ] 
+17761665, remove, finished,0, , false, [ ] 
+17973111, replace, finished,0,0, false, [ ] 
+18074354, add, started,59, , , [ ] 
+18181024, add, started,60, , , [ ] 
+18217720, remove, started,60, , , [ ] 
+18264499, add, started,67, , , [ ] 
+18272854, add, started,95, , , [ ] 
+18272857, remove, started,67, , , [ ] 
+18286986, add, started,78, , , [ ] 
+18518929, remove, finished,60, , false, [ ] 
+18590453, add, finished,60, , true, [ 60 ] 
+18650215, add, finished,95, , true, [ 60 95 ] 
+18736786, remove, finished,67, , false, [ 60 95 ] 
+18841398, add, finished,59, , true, [ 59 60 95 ] 
+18905478, add, finished,78, , true, [ 59 60 78 95 ] 
+19223513, add, finished,67, , true, [ 59 60 67 78 95 ] 

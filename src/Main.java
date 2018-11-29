@@ -55,6 +55,8 @@ public class Main {
 //			System.setOut(out);
 			
 			//mpt.test();
+            THREAD_COUNT = args.length > 0 ? Integer.parseInt(args[0]) : 10;
+            BOUND_COUNT = args.length > 0 ? Integer.parseInt(args[1]) : 100;
 			Thread[] opThreads = new Thread[THREAD_COUNT];
 			System.out.println("\nInsertion Threads, Removal Threads, Replacement Threads");
 			for(int i=0;i<THREAD_COUNT;i++){
