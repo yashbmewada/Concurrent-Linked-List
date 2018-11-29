@@ -1,0 +1,25 @@
+
+ADD Thread Count, Remove Thread Count, Replace Thread Count
+
+5, 2, 3 
+Time,Operation,Status,Item1,Item2,Result,List
+22571199, add, started, 5, , , [ ] 
+22529700, add, started, 7, , , [ ] 
+22593399, replace, started, 5, 50, , [ ] 
+23244900, add, finished, 5, , true, [ 5 ] 
+23298700, replace, finished, 5, 50, true, [ 7 50 ] 
+23291600, add, finished, 7, , true, [ 7 50 ] 
+23728599, remove, started, 3, , , [ 7 50 ] 
+23710000, add, started, 3, , , [ 7 50 ] 
+23832600, remove, started, 3, , , [ 7 50 ] 
+24038199, remove, finished, 3, , false, [ 7 50 ] 
+24108500, add, finished, 3, , true, [ 3 7 50 ] 
+24184900, remove, finished, 3, , true, [ 7 50 ] 
+24726199, add, started, 3, , , [ 7 50 ] 
+24870300, add, started, 4, , , [ 7 50 ] 
+24905099, replace, started, 4, 40, , [ 7 50 ] 
+25222300, add, finished, 4, , true, [ 3 4 7 50 ] 
+25181400, add, finished, 3, , true, [ 3 7 50 ] 
+25289600, replace, finished, 4, 40, true, [ 3 7 40 50 ] 
+25637400, replace, started, 4, 40, , [ 3 7 40 50 ] 
+26005399, replace, finished, 4, 40, false, [ 3 7 40 50 ] 

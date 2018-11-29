@@ -2,8 +2,9 @@
 public class LazyLinkedList<T extends Comparable<T>> {
 
 	private ListNode<T> head;
-
+	private static long baseTime;
 	public LazyLinkedList() {
+		this.baseTime = System.nanoTime();
 		this.head = new ListNode<>(Integer.MIN_VALUE);
 		this.head.next = new ListNode<>(Integer.MAX_VALUE);
 	}
@@ -22,12 +23,14 @@ public class LazyLinkedList<T extends Comparable<T>> {
 
 	// add method if only item is given , No Tag - default TagtoReplace is false.
 	public boolean add(T item) {
-		return add(item, false);
+		print("add", "started", item.toString(), "","");
+		boolean res = add(item,false);
+		print("add", "finished", item.toString(), "",String.valueOf(res));
+		return res;
 	}
 
-	// add an item while tagging it to replace another item
 	private boolean add(T item, boolean tagToReplace) {
-		Integer key = item.hashCode();
+		int key = item.hashCode();
 		while (true) {
 			ListNode<T> pred = this.head;
 			ListNode<T> curr = head.next;
@@ -40,13 +43,13 @@ public class LazyLinkedList<T extends Comparable<T>> {
 				curr.lock();
 				try {
 					int yes=0;
-					if (!tagToReplace && validateNodes(pred, curr)) {
+					if (tagToReplace==false && validateNodes(pred, curr)) {
 						yes=1;
 						if (curr.key == key) {
 							return false;
 						}
 					}
-					else if (tagToReplace && validateReplace(pred, curr)) {
+					else if (tagToReplace==true && validateReplace(pred, curr)) {
 						yes=1;
 						if (curr.key==key) {
 							return false;
@@ -58,18 +61,26 @@ public class LazyLinkedList<T extends Comparable<T>> {
 						pred.next = nodeToInsert;
 						return true;
 					}
-				} finally {
+					
+				} finally { // always unlock
 					curr.unlock();
 				}
-			} finally {
+			} finally { // always unlock
 				pred.unlock();
 			}
-
 		}
 	}
 
-	// delete item from the linkedlist.
+	
 
+	public boolean removeItem(T item) {
+		print("remove", "started", item.toString(), "","");
+		boolean res = remove(item);
+		print("remove", "finished", item.toString(), "",String.valueOf(res));
+		return res;
+	}
+	
+	// delete item from the linkedlist.
 	public boolean remove(T item) {
 		Integer key = item.hashCode();
 		while (true) {
@@ -103,6 +114,12 @@ public class LazyLinkedList<T extends Comparable<T>> {
 	}
 
 	// replace the item from linkedList
+	public boolean replaceItem(T oldItem, T newItem) {
+		print("replace", "started", oldItem.toString(), newItem.toString(),"");
+		boolean res = replace(oldItem,newItem);
+		print("replace","finished",oldItem.toString(), newItem.toString(),String.valueOf(res));
+		return res;
+	}
 
 	public boolean replace(T oldItem, T newItem) {
 		if(oldItem.compareTo(newItem)==0) {
@@ -114,7 +131,7 @@ public class LazyLinkedList<T extends Comparable<T>> {
 		while (true) {
 			ListNode<T> pred = this.head;
 			ListNode<T> curr = head.next;
-			while (curr.key != key) {
+			while (curr.key < key) {
 				pred = curr;
 				curr = curr.next;
 			}
@@ -152,6 +169,18 @@ public class LazyLinkedList<T extends Comparable<T>> {
 		}
 		sb.append("]");
 		return sb.toString();
+	}
+	
+	public void print(String operation, String status,String item1, String item2,String res) {
+		System.out.println(
+				String.format("%d, %s, %s, %s, %s, %s, %s ", 
+				System.nanoTime() - baseTime, 
+				operation,
+				status,
+				item1.toString(),
+				item2.toString(),
+				res,
+				this.toString()));
 	}
 
 }
